@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NAMA_FILE "tambah.txt"
+#define NAMA_FILE "stokbarang.txt"
 
 struct Barang {
     int nomor;
