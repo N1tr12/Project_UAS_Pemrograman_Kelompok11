@@ -1,16 +1,14 @@
-#include <stdio.h>
-#include <unistd.h>
+#ifndef INTRO_H
+#define INTRO_H
 
-void welcomeScreen() {
-    char intro[] = "TOKO SERBA ADA";
-    int delay = 100000;
-    
-    for (int i = 0; intro[i] != '\0'; i++) {
-        printf("\033[H\033[J");
-        for (int j = 0; j < i; j++) {
-            printf("%c ", intro[j]);
-        }
-        printf("%c\n", intro[i]);
-        usleep(delay);
-    }
-}
+#include <stdio.h>
+
+#ifdef _WIN32
+    #include <windows.h>  // Include Windows.h for Sleep
+#else
+    #include <time.h>     // Include time.h for nanosleep
+#endif
+
+void welcomeScreen();
+
+#endif
