@@ -1,172 +1,120 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "intro.h"
-#include "fungsibarang.h"
-void registerUser() {
-    #define MAX_USERNAME_LENGTH 50
-    #define MAX_PASSWORD_LENGTH 50
-    
-    struct User {
-        char username[MAX_USERNAME_LENGTH];
-        char password[MAX_PASSWORD_LENGTH];
-    };
-    
-    struct User user;
-    
-    printf("Username: ");
-    fgets(user.username, sizeof(user.username), stdin);
-    user.username[strcspn(user.username, "\n")] = '\0';
-    
-    printf("Password: ");
-    fgets(user.password, sizeof(user.password), stdin);
-    user.password[strcspn(user.password, "\n")] = '\0';
-    
-    FILE *file = fopen("data_akun_kasir.txt", "a");  
-    if (file == NULL) {
-        printf("Gagal membuka file.\n");
-        return;
-    }
-    
-    fprintf(file, "%s,%s\n", user.username, user.password);
-    fclose(file);
-    
-    printf("Registrasi berhasil!\n");
-}
-
-int loginUser() {
-    #define MAX_USERNAME_LENGTH 50
-    #define MAX_PASSWORD_LENGTH 50
-    
-    struct User {
-        char username[MAX_USERNAME_LENGTH];
-        char password[MAX_PASSWORD_LENGTH];
-    };
-    struct User user;
-    
-    printf("Username: ");
-    fgets(user.username, sizeof(user.username), stdin);
-    user.username[strcspn(user.username, "\n")] = '\0';
-    
-    printf("Password: ");
-    fgets(user.password, sizeof(user.password), stdin);
-    user.password[strcspn(user.password, "\n")] = '\0';
-    
-    FILE *file = fopen("data_akun_kasir.txt", "r");   
-    if (file == NULL) {
-        printf("Gagal membuka file.\n");
-        return 0;
-    }
-    
-    char line[MAX_USERNAME_LENGTH + MAX_PASSWORD_LENGTH + 2];
-    while (fgets(line, sizeof(line), file)) {
-        line[strcspn(line, "\n")] = '\0';
-        char *username = strtok(line, ",");
-        char *password = strtok(NULL, ",");
-        
-        if (username != NULL && password != NULL) {
-            if (strcmp(user.username, username) == 0 && strcmp(user.password, password) == 0) {
-                fclose(file);
-                return 1;
-            }
-        }
-    }
-    
-    fclose(file);
-    
-    return 0;
-
-}
+#include <string.h>
+#include "barang.h"
+#include "welcome.h"
+#include "login.h"
 
 int main() {
-    int choice;
+    struct Barang daftarBarang[MAX_BARANG];
+    int jumlahBarang = 0;
+    int pilih, fungsi_barang, role;
     
-    do {
-        printf("=== Program Login ===\n");
-        printf("1. Registrasi\n");
+    muatDariFile(daftarBarang, &jumlahBarang);
+
+    welcome();
+
+    printf("\nSilahkan Login jika anda telah mempunyai akun, Jika belum silahkan Register terlebih dahulu!\n");
+
+    while (1)
+    {
+        printf("\nMenu:\n");
+        printf("1. Register\n");
         printf("2. Login\n");
-        printf("3. Keluar\n");
-        printf("Pilihan Anda: ");
-        scanf("%d", &choice);
-        getchar();  // Menghapus karakter newline (\n) setelah membaca angka
-        
-        switch (choice) {
-            case 1:
-                registerUser();
-                break;
-            case 2:
-                if (loginUser()) {
-                    printf("Login berhasil!\n");
-                } else {
-                    printf("Username atau password salah. Login gagal.\n");
-                }
-                break;
-            case 3:
-                printf("Terima kasih!\n");
-                break;
-            default:
-                printf("Pilihan tidak valid. Silakan pilih kembali.\n");
-        }
-        
-        printf("\n");
-    } while (choice != 3);
-    
-    return 0;
-}
-int main() {
-    int numBarang, pilih, loop = 1; // Initialize loop
-
-    welcomeScreen();
-
-    while (loop) { // Use while loop for better control
-        printf("Pilih : \n");
-        printf("1. Tambah Barang\n");
-        printf("2. Melihat Barang\n");
-        printf("3. Keluar\n"); // Added an option to exit
-        printf("Pilihan Anda : ");
+        printf("3. Exit\n");
+        printf("Pilih menu: ");
         scanf("%d", &pilih);
 
         switch (pilih) {
             case 1:
-                printf("Masukkan jumlah barang: ");
-                scanf("%d", &numBarang);
-
-                struct Barang *daftarBarang = (struct Barang *)malloc(numBarang * sizeof(struct Barang));
-                if (daftarBarang == NULL) {
-                    printf("Alokasi memori gagal.\n");
-                    return 1;
-                }
-
-                for (int i = 0; i < numBarang; i++) {
-                    printf("Barang ke-%d\n", i + 1);
-                    printf("Masukkan nomor barang: ");
-                    scanf("%d", &daftarBarang[i].nomor);
-                    printf("Masukkan nama barang: ");
-                    scanf("%s", daftarBarang[i].nama);
-                    printf("Masukkan harga barang: ");
-                    scanf("%f", &daftarBarang[i].harga);
-                    printf("Masukkan jumlah barang: ");
-                    scanf("%d", &daftarBarang[i].stok);
-                }
-
-                tambahBarang(daftarBarang, numBarang);
-                printf("Data barang berhasil disimpan ke dalam file.\n");
-
-                free(daftarBarang);
+                register_akun();
                 break;
-
             case 2:
-                lihatDaftarBarang();
-                break;
+                login();
+                printf("\nRole :\n");
+                printf("1. Admin\n");
+                printf("2. User\n");
+                printf("3. Keluar\n");
+                printf("Pilih:");
+                scanf("%d", &role);
 
+                switch (role)
+                {
+                case 1:
+                    do
+                    {
+                        printf("\nMenu:\n");
+                        printf("1. Tambah Barang\n");
+                        printf("2. Lihat Barang\n");
+                        printf("3. Hapus Barang\n");
+                        printf("4. Simpan ke File\n");
+                        printf("5. Keluar\n");
+                        printf("Pilih menu: ");
+                        scanf("%d", &fungsi_barang);
+
+                        switch (fungsi_barang)
+                        {
+                        case 1:
+                            tambahBarang(daftarBarang, &jumlahBarang);
+                            break;
+                        case 2:
+                            lihatBarang(daftarBarang, jumlahBarang);
+                            break;
+                        case 3:
+                            if (jumlahBarang == 0) {
+                                printf("Belum ada barang yang tersimpan.\n");
+                            } else {
+                                int index;
+                                printf("Masukkan indeks barang yang ingin dihapus: ");
+                                scanf("%d", &index);
+                                hapusBarang(daftarBarang, &jumlahBarang, index - 1);
+                            }
+                            break;
+                        case 4:
+                            simpanKeFile(daftarBarang, jumlahBarang);
+                            break;
+                        case 5:
+                            printf("Terima kasih!\n");
+                            break;
+                        default:
+                            printf("Waduh, yang kamu cari gak ada nih. Coba lagi!\n");
+                            break;
+                        }
+                    } while (fungsi_barang != 5);
+                case 2:
+                    do
+                    {
+                        printf("\nMenu:\n");
+                        printf("1. Lihat barang yang tersedia\n");
+                        printf("2. Beli\n");
+                        printf("3. Keluar\n");
+                        printf("Pilih menu:");
+                        scanf("%d", &fungsi_barang);
+
+                        switch (fungsi_barang)
+                        {
+                        case 1:
+                            lihatBarang(daftarBarang, jumlahBarang);
+                            break;
+                        case 2:
+                            printf("Mau Beli apa?");
+                        case 3:
+                            exit(0);
+                        default:
+                            break;
+                        }
+                    } while (fungsi_barang != 3);
+                break;
+                case 3:
+                    exit(0);
+                    break;
+                }
             case 3:
-                loop = 0; // Exit the loop
-                break;
-
+                printf("Terima kasih! Semoga kita berjumpa lagi.");
+                exit(0);
             default:
-                printf("Pilihan tidak valid. Silakan coba lagi.\n");
-                break;
+                printf("Waduh, yang kamu cari gak ada nih. Coba lagi!\n");
         }
-    }
-
+    }    
     return 0;
 }
