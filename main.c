@@ -4,11 +4,12 @@
 #include "barang.h"
 #include "welcome.h"
 #include "login.h"
+#include "transaksi.h"
 
 int main() {
     struct Barang daftarBarang[MAX_BARANG];
     int jumlahBarang = 0;
-    int pilih, fungsi_barang, role;
+    int pilih, fungsi_barang, role, opsi;
     
     muatDariFile(daftarBarang, &jumlahBarang);
 
@@ -21,8 +22,8 @@ int main() {
         printf("\nMenu:\n");
         printf("1. Register\n");
         printf("2. Login\n");
-        printf("3. Exit\n");
-        printf("Pilih menu: ");
+        printf("3. Exit Program\n");
+        printf("\nPilih menu: ");
         scanf("%d", &pilih);
 
         switch (pilih) {
@@ -35,7 +36,7 @@ int main() {
                 printf("1. Admin\n");
                 printf("2. User\n");
                 printf("3. Keluar\n");
-                printf("Pilih:");
+                printf("\nPilih: ");
                 scanf("%d", &role);
 
                 switch (role)
@@ -49,7 +50,7 @@ int main() {
                         printf("3. Hapus Barang\n");
                         printf("4. Simpan ke File\n");
                         printf("5. Keluar\n");
-                        printf("Pilih menu: ");
+                        printf("\nPilih menu: ");
                         scanf("%d", &fungsi_barang);
 
                         switch (fungsi_barang)
@@ -84,11 +85,16 @@ int main() {
                 case 2:
                     do
                     {
+                        while (1)
+                        {
+                            /* code */
+                        }
+                        
                         printf("\nMenu:\n");
                         printf("1. Lihat barang yang tersedia\n");
                         printf("2. Beli\n");
                         printf("3. Keluar\n");
-                        printf("Pilih menu:");
+                        printf("\nPilih menu: ");
                         scanf("%d", &fungsi_barang);
 
                         switch (fungsi_barang)
@@ -97,7 +103,7 @@ int main() {
                             lihatBarang(daftarBarang, jumlahBarang);
                             break;
                         case 2:
-                            printf("Mau Beli apa?");
+                            transaksi();
                         case 3:
                             exit(0);
                         default:
