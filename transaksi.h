@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct transaksi {
@@ -9,6 +10,15 @@ struct transaksi {
     float total;
     float harga;
 };
+
+struct pembayaran {
+    int idPembayaran;
+    char typePembayaran[20];
+    float harga;
+    struct transaksi trans;
+};
+
+
 
 void transaksi() {
     char namaPembeli[50], tanggal[50], namaBarang[30]; 
@@ -41,4 +51,24 @@ void transaksi() {
     printf("\n\n------------------------------------------------");
     printf("\nTOTAL\t\t\t\t%.2f", jumlah * harga);
     printf("\n------------------------------------------------");
+}
+
+void pembayaran(struct pembayaran byr, int bayar) {
+    FILE *file;
+    file = fopen("pembayaran.txt", "a");
+
+    if (file == NULL)
+    {
+        printf("Gagal membuka file");
+        return;
+    }
+
+    printf("Masukkan id pembayaran: ");
+    scanf("%d", &byr.idPembayaran);
+    printf("\nTipe pembayaran: ");
+    scanf("%s", &byr.typePembayaran);
+    printf("\nMasukkan total harga yang dibayar: ");
+    scanf("%f", &byr.harga);
+
+    fclose(file);
 }
