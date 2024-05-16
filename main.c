@@ -7,9 +7,10 @@
 #include "transaksi.h"
 
 int main() {
-    struct Barang daftarBarang[MAX_BARANG];
-    int jumlahBarang = 0;
-    int pilih, fungsi_barang, role, opsi;
+    struct Barang daftarBarang[MAX_BARANG];\
+    struct pembayaran byr;
+    int jumlahBarang = 0, jumlahBayar = 0;
+    int pilih, fungsi_barang, role, opsi, bayar;
     
     muatDariFile(daftarBarang, &jumlahBarang);
 
@@ -85,11 +86,6 @@ int main() {
                 case 2:
                     do
                     {
-                        while (1)
-                        {
-                            /* code */
-                        }
-                        
                         printf("\nMenu:\n");
                         printf("1. Lihat barang yang tersedia\n");
                         printf("2. Beli\n");
@@ -104,6 +100,23 @@ int main() {
                             break;
                         case 2:
                             transaksi();
+                            printf("\nBayar : ");
+                            printf("\n1. Iya");
+                            printf("\n2. Tidak");
+                            printf("\nPilih :");
+                            scanf("%d", &bayar);
+                            
+                            switch (bayar)
+                            {
+                            case 1:
+                                pembayaran(byr, jumlahBayar);
+                                break;
+                            
+                            case 2:
+                                exit(0);
+                                break;
+                            }
+                            break;
                         case 3:
                             exit(0);
                         default:
